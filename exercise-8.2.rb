@@ -1,13 +1,20 @@
 class Poker
+  # Added these two attr_accessors to remove the 
+  # get_player_name(i) and get_player_hand(i) explicit functions
+  attr_accessor :players, :hands
+
   def initialize(players)
     @players = players
     @hands = []
     players.length().times { |x| @hands.append(nil) }
   end
-
-  def play_poker()
+  
+  # changed play_poker() to play() method
+  def play()
     puts "Players in the poker game:"
-    @players.length().times { |i| puts "#{self.get_player_name(i)}: #{self.get_player_hand(i)}" }
+    # Used zip to print player and hand without the explicit two function 
+    # calls inside the .times loop 
+    players.zip(hands).each {|player, hand| puts "#{player}: #{hand}" }    
     # [pretend there's code here]
   end
 
@@ -15,32 +22,26 @@ class Poker
     return "[pretend these are poker results]"
   end
 
-  def get_player_name(i)
-    return @players[i]
-  end
-
-  def get_player_hand(i)
-    return @hands[i]
-  end
 end
 
 class Chess
+  # added attr_reader players and removed get_player_name(i) function
+  attr_reader :players
   def initialize(players)
     @players = players
   end
-
-  def play_game()
+  
+  # changed play_game() to play() method 
+  def play()
     puts "Players in the chess game:"
-    @players.length().times { |x| puts "#{self.get_player_name(x)}: #{@players[x][1]}" }
+    
+    # replaced .times with .map and removed function calls inside the body
+    @players.map { |player| puts "#{player[0]}: #{player[1]}" }
     # [pretend there's code here]
   end
 
   def get_results()
     return "[pretend these are chess results]"
-  end
-
-  def get_player_name(i)
-    @players[i][0]
   end
 end
 
@@ -58,40 +59,36 @@ class Go
     @players = []
     players.each { |x, y| @players.append(GoPlayer.new(x, y)) }
   end
-
+  
   def play()
     puts "Players in the go game:"
     @players.each { |player| puts "#{player.name}: #{player.color}" }
     # [pretend there's code here]
   end
-
-  def get_score()
+  
+  # replaced get_score() with get_results()
+  def get_results()
     return "[pretend these are go results]"
   end
 end
 
 class PlayGames
+  # added these two readers 
+  attr_reader :game_number, :player_list
 
   def initialize(game_number, player_list)
     @player_list = player_list
     @game_number = game_number
   end
 
+  # added this line of code to get the right class running 
+  MAP = {1 => Poker, 2 => Chess,3 => Go}
+  
+  # removed case statement
   def play()
-    case @game_number
-    when 1
-      poker = Poker.new(@player_list)
-      poker.play_poker()
-      puts poker.get_results()
-    when 2
-      chess = Chess.new(@player_list)
-      chess.play_game()
-      puts chess.get_results()
-    when 3
-      go = Go.new(@player_list)
-      go.play()
-      puts go.get_score()
-    end
+    game = MAP[game_number].new(player_list)
+    game.play()
+    puts game.get_results()
   end
 end
 
