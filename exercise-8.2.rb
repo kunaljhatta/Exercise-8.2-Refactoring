@@ -80,13 +80,12 @@ class PlayGames
     @player_list = player_list
     @game_number = game_number
   end
-
-  # added this line of code to get the right class running 
-  MAP = {1 => Poker, 2 => Chess,3 => Go}
   
   # removed case statement
   def play()
-    game = MAP[game_number].new(player_list)
+    # created dictionary to get the right class running 
+    game_dict = {1 => Poker,2 => Chess,3 => Go}
+    game = game_dict[game_number].new(player_list)
     game.play()
     puts game.get_results()
   end
